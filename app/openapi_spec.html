@@ -1,0 +1,246 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Toy Collection API",
+    "description": "An API for managing a collection of toys.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:80",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/toys": {
+      "get": {
+        "summary": "List all toys",
+        "operationId": "listToys",
+        "responses": {
+          "200": {
+            "description": "A list of toys",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Toy" }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": { "error": "Internal server error" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new toy",
+        "operationId": "createToy",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToyInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Toy created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Toy"
+                },
+                "example": {
+                  "id": "toy123",
+                  "name": "blocks",
+                  "descr": "12 building blocks",
+                  "age": 3,
+                  "features": ["durable", "educational"],
+                  "price": 18.00
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported media type",
+            "content": {
+              "application/json": {
+                "example": { "error": "Content type must be application/json" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": { "error": "Internal server error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/toys/{id}": {
+      "get": {
+        "summary": "Get a specific toy by ID",
+        "operationId": "getToy",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Toy retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Toy" }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": { "error": "Internal server error" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace a toy resource",
+        "operationId": "replaceToy",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ToyInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Toy replaced successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Toy" }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "415": {
+            "description": "Unsupported media type",
+            "content": {
+              "application/json": {
+                "example": { "error": "Content type must be application/json" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": { "error": "Internal server error" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a toy by ID",
+        "operationId": "deleteToy",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Toy deleted successfully"
+          },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "example": { "error": "Internal server error" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Toy": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ToyInput" },
+          {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "readOnly": true }
+            },
+            "required": ["id"]
+          }
+        ]
+      },
+      "ToyInput": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "descr": { "type": "string" },
+          "age": { "type": "integer" },
+          "price": { "type": "number", "format": "float" },
+          "features": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["name", "descr", "age", "price", "features"]
+      }
+    },
+    "responses": {
+      "NotFound": {
+        "description": "Toy not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": { "type": "string" }
+              },
+              "required": ["error"]
+            },
+            "example": { "error": "Toy not found" }
+          }
+        }
+      }
+    }
+  }
+}

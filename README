@@ -1,8 +1,0 @@
-This repository contains examples for building REST applications using Docker containers and GItHub Actions.
-The application code is given in the subdirectory /app.
-I. In /app are the files:
-/toys.py
-Dockerfile
-
-toys.py is the code for the toys service with REST APIs
-Dockerfile is the Dockerfile for creating a container for this service

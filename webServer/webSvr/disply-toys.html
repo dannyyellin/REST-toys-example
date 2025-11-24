@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Toy List Inventory</title>
+    <script>
+        function fetchToys() {
+            fetch('http://localhost:8001/toys')
+                .then(response => response.json())
+                .then(data => {
+                    const toyList = document.getElementById('toyList');
+                    toyList.innerHTML = ''; // Clear the list before appending
+
+                    data.forEach(toy => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            Name: ${toy.name} (${toy.age}+) - $${toy.price}<br>
+                            Description: ${toy.descr}<br>
+                            ID: ${toy.id}<br>
+                        `;
+                        toyList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching toys:', error);
+                    // Handle error, e.g., display an error message
+                });
+        }
+
+        // Initial fetch on page load
+        window.onload = fetchToys;
+    </script>
+</head>
+<body>
+    <h1>Toy List Inventory</h1>
+    <button onclick="fetchToys()">Refresh</button>
+    <ul id="toyList"></ul>
+</body>
+</html>

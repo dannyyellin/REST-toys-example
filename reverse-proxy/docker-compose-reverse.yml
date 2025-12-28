@@ -1,0 +1,31 @@
+version: '3'  # version of compose format
+
+services:
+  toys-svr:
+    build: ../webServer/app   # use same app as in webServer build;  path is relative to current directory
+    volumes:
+      - type: bind
+        source: ../webServer/app #host directory
+        target: /app # container directory
+    ports:
+      - "8001:80"  # host:container
+    restart: always
+    depends_on:
+      - mongo
+
+  reverse:
+    build: ./
+    ports:
+      - "80:80"  # host:container
+    depends_on:
+      - toys-svr  # NGINX depends on toy-service running. orders when services are started
+
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

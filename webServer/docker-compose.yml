@@ -1,0 +1,32 @@
+version: '3'  # version of compose format
+
+services:
+  toys-robust:
+    build: app  # path is relative to current directory
+    volumes:
+      - type: bind
+        source: ./app #host directory
+        target: /app # container directory
+    ports:
+      - "8001:80"  # host:container
+
+  website:
+    image: nginx:alpine
+    volumes:
+      - type: bind
+        source: ./webSvr/disply-toys.html  # host directory (contains html file)
+        target: /usr/share/nginx/html/index.html # container directory (where NGINX looks for index file)
+    ports:
+      - "8080:80"  # host:container
+    depends_on:
+      - toys-robust  # website is not going to work unless toys-service is running. start toys-robust svc first.
+
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

@@ -1,0 +1,7 @@
+This directory illustates using Docker Compose to create an application that runs 
+multiple services:
+i.  The toys service
+ii. MongoDB used by the toys service to store its data
+iii. nginx used as a webserver to display the toys inventory
+
+It also illustrates using bind mounted volumes

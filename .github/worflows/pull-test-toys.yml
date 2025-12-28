@@ -1,0 +1,75 @@
+name: pull-and-test-toys
+on:
+  workflow_run:
+    workflows: ["build-and-push-toys"]
+    types:
+      - completed
+  workflow_dispatch:
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    services:
+      toyscontainer:
+        image: dannyteaching/toys:latest
+        ports:
+           - 80:8000
+    steps:
+      - name: Check if the container is running
+        run: docker ps -a
+      - name: create directory to store test results
+        run: mkdir mypath
+      - name: Wait for container to initialize
+        run: sleep 5
+      - name: curl test1
+        run: |
+          echo curl -v --location --request POST 'http://0.0.0.0:80/toys' \
+            --header 'Content-Type: application/json' \
+            --data '{
+                "name": "blocks", 
+                "descr": "12 building blocks", 
+                "age": 3, 
+                "price": 18.00 
+            }' >> mypath/results
+          echo $(curl -v --location --request POST 'http://0.0.0.0:80/toys' \
+            --header 'Content-Type: application/json' \
+            --data '{ 
+                "name": "blocks", 
+                "descr": "12 building blocks", 
+                "age": 3, 
+                "price": 18.00 
+            }') >> mypath/results
+      - name: curl test2
+        run: |
+          echo curl -v --location --request POST 'http://0.0.0.0:80/toys' \
+            --header 'Content-Type: application/json' \
+            --data '{ 
+                "name": "Zoo day", 
+                "descr": "Pictures of zoo animals", 
+                "age": 4, 
+                "price": 26.00 
+            }' >> mypath/results
+          echo $(curl -v --location --request POST 'http://0.0.0.0:80/toys' \
+            --header 'Content-Type: application/json' \
+            --data '{ 
+                "name": "Zoo day", 
+                "descr": "Pictures of zoo animals", 
+                "age": 4, 
+                "price": 26.00 
+            }') >> mypath/results
+      - name: curl test3
+        run: |
+          echo curl -v --location --request GET 'http://0.0.0.0:80/toys' >> mypath/results
+          echo $(curl -v --location --request GET 'http://0.0.0.0:80/toys') >> mypath/results
+      - name: get container log
+        if: always()
+        run: |
+          CONTAINER_ID=$(docker ps -a -q -f ancestor=dannyteaching/toys:latest)
+          if [ -n "$CONTAINER_ID" ]; then
+            docker logs "$CONTAINER_ID"
+          else
+            echo "Container based on image dannyteaching/toys:latest not found."
+          fi
+      - name: curl results
+        run: cat mypath/results
+#    regarding workflow_run:
+#    https://stackoverflow.com/questions/62750603/github-actions-trigger-another-action-after-one-action-is-completed/62772822#62772822

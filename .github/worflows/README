@@ -1,0 +1,21 @@
+Guide to the workflows in this directory.
+All the workflows involve the very simple rest-word-svr python program, which is a very simple REST server.
+1. build-and-push-v2.yml   This work workflow is triggered by a push event to the repo.   It then builds the image
+    based on the Dockerfile, and then pushes it to Dockerfile.  It pushes one with the tag "latest" and one with the tag
+    <date>, where <date> = today's date.
+2. pull-and-test-image-v2.yml    This workflow is triggered by the event of "build-and-push-v2.yml" completing
+    successfully.   If it has, then there is a new image in Dockerhub.   It pulls down that image and tests it using
+    curl commands.
+3. build-test-push-v3.yml    This workflow is triggered by a push event to the repo.   It builds the image and uploads
+    it to DockerHub.  Then it downloads the image from DockerHub, tests it using pytest, and uploads the results of the
+    tests so they are visible after the workflow completes.
+4.  build-test-push-v4.yml    This workflow is similar to build-test-push-v3.yml.   However, it does things better and
+    more realistically:   it is also triggered by a push event to the repo.  It then builds the image.  But instead of
+    pushing it to Dockerhub, it uploads it to GitHub.  The next job in the workload downloads the image from GitHub and
+    tests it using pytest.   It uploads the test results to be accessible after the workflow completes.   if the tests
+    are successful, it pushes the image to DockerHub.   It actually pushes the image tagged with "latest" and tagged
+    with <date>.
+
+UPDATES Jan 1, 2025
+5.  build-and-push-simple.yml     This is mostly the same as build-and-push with updates to version numbers of GitHub
+    actions and using toys REST program example instead of word server.

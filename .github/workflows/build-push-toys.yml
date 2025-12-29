@@ -16,11 +16,10 @@ jobs:
       run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
     - name: Build the Docker image
       run: |
-        docker build . --file cicd/Dockerfile --tag \
-        ${{ vars.DOCKER_COURSE_USERNAME }}/toys
+        docker build ../../cicd/ --tag ${{ vars.DOCKER_COURSE_USERNAME }}/toys
 #        docker build . --file Dockerfile --tag my-image-name:$(date +%s)
         docker tag ${{ vars.DOCKER_COURSE_USERNAME }}/toys \
-        ${{ varss.DOCKER_COURSE_USERNAME }}/toys:${{ env.DATE }}
+        ${{ vars.DOCKER_COURSE_USERNAME }}/toys:${{ env.DATE }}
     - name: Push to Docker Hub
       run: |
         docker push ${{ vars.DOCKER_COURSE_USERNAME }}/toys

@@ -14,6 +14,8 @@ jobs:
           # username/password is the username/pw of my DockerHub teaching acct
           username: ${{ vars.USERNAME }}
           password: ${{ secrets.PASSWORD }}
+    - name: do nothing
+      run: echo "hello"
     - name: Set DATE
       run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
     - name: Build the Docker image

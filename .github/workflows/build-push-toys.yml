@@ -26,8 +26,7 @@ jobs:
       run: |
         docker build ./cicd/ --tag ${{ vars.USERNAME }}/toys-robust
 #        docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-#        docker tag ${{ vars.USERNAME }}/toys-robust \
-#        ${{ vars.USERNAME }}/toys-robust:${{ env.DATE }}
+        docker tag ${{ vars.USERNAME }}/toys-robust ${{ vars.USERNAME }}/toys-robust:${{ env.DATE }}
 #    - name: Push to Docker Hub
 #      run: |
 #        docker push ${{ vars.USERNAME }}/toys-robust

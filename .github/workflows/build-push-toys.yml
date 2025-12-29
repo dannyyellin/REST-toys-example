@@ -20,8 +20,11 @@ jobs:
         pwd
         ls -la
     - name: Set DATE
-      run:
-        echo "DATE=$(date +'Y-%m-%d')" >> GITHUB_ENV
+      run: |
+        echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Verify DATE
+      run: |
+        echo "DATE is: '${DATE}'"
     - name: Build the Docker image
       run: |
         docker build ./cicd/ --tag ${{ vars.USERNAME }}/toys-robust

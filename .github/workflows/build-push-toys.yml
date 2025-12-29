@@ -9,13 +9,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Log in to Docker Hub
-    # username/password is the username/pw of my DockerHub teaching acct
+      # username/password is the username/pw of my DockerHub teaching acct
       uses: docker/login-action@v3
       with:
-        username: ${{ vars.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-    -name: bogus
-     - echo "foo"
+          username: ${{ vars.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
     - name: Set DATE
       run: |
         echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV

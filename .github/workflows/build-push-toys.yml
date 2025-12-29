@@ -13,7 +13,6 @@ jobs:
       with:
         username: ${{ vars.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-#      with:
 #          # username/password is the username/pw of my DockerHub teaching acct
 #          username: ${{ vars.USERNAME }}
 #          password: ${{ secrets.PASSWORD }}

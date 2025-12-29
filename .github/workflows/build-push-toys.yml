@@ -20,7 +20,7 @@ jobs:
         ${{ vars.DOCKER_COURSE_USERNAME }}/toys
 #        docker build . --file Dockerfile --tag my-image-name:$(date +%s)
         docker tag ${{ vars.DOCKER_COURSE_USERNAME }}/toys \
-        ${{ secrets.DOCKER_COURSE_USERNAME }}/toys:${{ env.DATE }}
+        ${{ varss.DOCKER_COURSE_USERNAME }}/toys:${{ env.DATE }}
     - name: Push to Docker Hub
       run: |
         docker push ${{ vars.DOCKER_COURSE_USERNAME }}/toys

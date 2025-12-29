@@ -13,10 +13,10 @@ jobs:
           username: ${{ vars.DOCKER_COURSE_USERNAME }}
           password: ${{ secrets.DOCKER_COURSE_PASSWORD }}
     - name: Set DATE
-      run: echo "DATE=$(date -I)" >> $GITHUB_ENV
+      run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
     - name: Build the Docker image
       run: |
-        docker build . --file cicd/Dockerfile.toys --tag \
+        docker build . --file cicd/Dockerfile --tag \
         ${{ vars.DOCKER_COURSE_USERNAME }}/toys
 #        docker build . --file Dockerfile --tag my-image-name:$(date +%s)
         docker tag ${{ vars.DOCKER_COURSE_USERNAME }}/toys \

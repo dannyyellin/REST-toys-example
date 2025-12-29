@@ -12,17 +12,17 @@ jobs:
       with:
           username: ${{ vars.DOCKER_COURSE_USERNAME }}
           password: ${{ secrets.DOCKER_COURSE_PASSWORD }}
-    - name: Set DATE
-      run echo "HELLO" >> $GITHUB_ENV
+#    - name: Set DATE
+#      run echo "HELLO" >> $GITHUB_ENV
 #      run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-    - name: Build the Docker image
-      run: |
-        docker build ../../cicd/ --tag ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust
-#        docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-        docker tag ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust \
-        ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust:${{ env.DATE }}
-    - name: Push to Docker Hub
-      run: |
-        docker push ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust
-        docker push \
-        ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust:${{ env.DATE }}
+#    - name: Build the Docker image
+#      run: |
+#        docker build ../../cicd/ --tag ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust
+##        docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+#        docker tag ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust \
+#        ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust:${{ env.DATE }}
+#    - name: Push to Docker Hub
+#      run: |
+#        docker push ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust
+#        docker push \
+#        ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust:${{ env.DATE }}

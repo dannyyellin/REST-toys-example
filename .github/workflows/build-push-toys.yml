@@ -13,7 +13,8 @@ jobs:
           username: ${{ vars.DOCKER_COURSE_USERNAME }}
           password: ${{ secrets.DOCKER_COURSE_PASSWORD }}
     - name: Set DATE
-      run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      run echo "HELLO" >> $GITHUB_ENV
+#      run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
     - name: Build the Docker image
       run: |
         docker build ../../cicd/ --tag ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust

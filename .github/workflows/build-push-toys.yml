@@ -8,12 +8,12 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v3
-      with:
-          # username/password is the username/pw of my DockerHub teaching acct
-          username: ${{ vars.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+#    - name: Log in to Docker Hub
+#      uses: docker/login-action@v3
+#      with:
+#          # username/password is the username/pw of my DockerHub teaching acct
+#          username: ${{ vars.USERNAME }}
+#          password: ${{ secrets.PASSWORD }}
     - name: do nothing
       run: echo "hello"
     - name: Set DATE

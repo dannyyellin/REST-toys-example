@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     services:
       toyscontainer:
-        image: dannyteaching/toys:latest
+        image: dannyteaching/toys-robust:latest
         ports:
-           - 80:8000
+           - 80:80
     steps:
       - name: Check if the container is running
         run: docker ps -a

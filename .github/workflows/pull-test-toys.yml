@@ -63,11 +63,11 @@ jobs:
       - name: get container log
         if: always()
         run: |
-          CONTAINER_ID=$(docker ps -a -q -f ancestor=dannyteaching/toys:latest)
+          CONTAINER_ID=$(docker ps -a -q -f ancestor=dannyteaching/toys-robust:latest)
           if [ -n "$CONTAINER_ID" ]; then
             docker logs "$CONTAINER_ID"
           else
-            echo "Container based on image dannyteaching/toys:latest not found."
+            echo "Container based on image dannyteaching/toys-robust:latest not found."
           fi
       - name: curl results
         run: cat mypath/results

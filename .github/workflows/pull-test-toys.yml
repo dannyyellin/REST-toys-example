@@ -13,6 +13,10 @@ jobs:
         image: dannyteaching/toys-robust:latest
         ports:
            - 80:80
+      mongo:
+        image: mongo
+        ports:
+           - 27017:27017
     steps:
       - name: Check if the container is running
         run: docker ps -a

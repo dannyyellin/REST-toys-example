@@ -34,16 +34,20 @@ jobs:
         path: /tmp
     - name: Verify downloaded artifact
       run: ls -l /tmp
-    - name: Load Docker toys-robust image from previous job
+    - name: Load Docker toys-robust tar image from previous job (load is for tar images)
       run: docker load --input /tmp/image.tar
     - name: check toys-robust image is loaded
       run: docker image ls
-    - name: Load mongo image from dockerhub
-      run: docker load mongo:latest
+    - name: Pull mongo image from dockerhub
+      run: docker pull mongo:latest
     - name: run mongo in container
-      run: docker run -p27017:27017 mongo:latest &
+      run: docker run -d -p 27017:27017 mongo:latest --name mongo mongo:latest
+    - name: wait for Mongo to be ready
+      run: |
+        timeout 30 sh -c 'until docker exec mongo mongosh --eval "db.adminCommand({ping: 1})" > /dev/null 2>&1; do sleep 1; done'
+        echo "MongoDB is ready!"
     - name: run toys-robust image in container
-      run: docker run -p8000:80 toys-robust &
+      run: docker run -p 8000:80 toys-robust &
     - name: Check container is running
       run: docker ps
 #    # 2. set up python and pytest environment

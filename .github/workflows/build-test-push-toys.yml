@@ -41,7 +41,30 @@ jobs:
     - name: Pull mongo image from dockerhub
       run: docker pull mongo:latest
     - name: run mongo in container
-      run: docker run -d -p 27017:27017 mongo:latest --name mongo mongo:latest
+      run: docker run -d -p 27017:27017 --name mongo mongo:latest
+
+      # start
+    - name: Check if MongoDB container is running
+      run: docker ps -a
+
+    - name: Check MongoDB logs
+      run: docker logs mongo
+
+    - name: Wait for MongoDB to be ready
+      run: |
+        echo "Waiting for MongoDB to be ready..."
+        for i in {1..30}; do
+          if docker exec mongo mongosh --quiet --eval "db.adminCommand({ping: 1})" > /dev/null 2>&1; then
+            echo "MongoDB is ready!"
+            exit 0
+          fi
+          echo "Attempt $i: MongoDB not ready yet, waiting..."
+          sleep 2
+        done
+        echo "MongoDB failed to start in time"
+        docker logs mongo
+        exit 1
+      #end
     - name: wait for Mongo to be ready
       run: |
         timeout 30 sh -c 'until docker exec mongo mongosh --eval "db.adminCommand({ping: 1})" > /dev/null 2>&1; do sleep 1; done'
@@ -82,12 +105,12 @@ jobs:
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
-        username: ${{ secrets.DOCKER_COURSE_USERNAME }}
-        password: ${{ secrets.DOCKER_COURSE_PASSWORD }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
     - name: push image with "latest" and date tags to DH
       run: |
-        docker push ${{ secrets.DOCKER_COURSE_USERNAME }}/toys
-        docker tag ${{ secrets.DOCKER_COURSE_USERNAME }}/toys \
-        ${{ secrets.DOCKER_COURSE_USERNAME }}/toys:${{ env.DATE }}
+        docker push ${{ secrets.USERNAME }}/toys
+        docker tag ${{ secrets.USERNAME }}/toys \
+        ${{ secrets.USERNAME }}/toys:${{ env.DATE }}
         docker push \
-        ${{ secrets.DOCKER_COURSE_USERNAME }}/toys:${{ env.DATE }}
+        ${{ secrets.USERNAME }}/toys:${{ env.DATE }}

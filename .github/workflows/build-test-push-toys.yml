@@ -13,8 +13,8 @@ jobs:
     - name: Build and export
       uses: docker/build-push-action@v5
       with:
-        context: ./cicd/
-        file: ./Dockerfile
+        context: ./cicd
+        file: ./cicd/Dockerfile
         tags: toys-robust:latest, ${{ vars.USERNAME }}/toys-robust:latest
         outputs: type=docker,dest=/tmp/image.tar
     - name: Upload artifact

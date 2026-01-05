@@ -51,6 +51,8 @@ def test_post_toy1():
     response = requests.post(urlToys,
         headers={"Content-Type":"application/json"},
         data=json_data)
+    print(f"response.json() = {response.json()}")
+    sys.stdout.flush()
     id1 = response.json()['id']
     assert response.status_code == 201
 
@@ -58,6 +60,8 @@ def test_post_toy1():
 def test_get_toy1():
     global id1
     response2 = requests.get(urlToys + '/' + id1)
+    print(f"response2.json() = {response2.json()}")
+    sys.stdout.flush()
     assert response2.status_code == 200
     assert_fields_equal(toy1, response2.json())
 

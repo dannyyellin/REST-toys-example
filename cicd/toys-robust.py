@@ -45,7 +45,7 @@ def addToy():
         result = toysColl.insert_one(toy)
         id = str(result.inserted_id)
         # NOTE that we are only returning the JSON containing the id of the toys, not the entire toy object
-        response_data = {"id":id}
+        response_data = {'id':id}
         return jsonify(response_data),201
     except Exception as e:
         print("Exception: ", str(e))

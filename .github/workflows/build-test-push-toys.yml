@@ -26,30 +26,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-#    # 1. download image and run it in a container
-    - name: Download artifact
-      uses: actions/download-artifact@v4  # downloads all artifacts
-      with:
-        name: toys-robust
-        path: /tmp
-    - name: Verify downloaded artifact
-      run: ls -l /tmp
-    - name: Load Docker toys-robust tar image from previous job (load is for tar images)
-      run: docker load --input /tmp/image.tar
-    - name: check toys-robust image is loaded
-      run: docker image ls
+    #1. Pull Mongo and run it.
     - name: Pull mongo image from dockerhub
       run: docker pull mongo:latest
     - name: run mongo in container
       run: docker run -d -p 27017:27017 --name mongo mongo:latest
-
-      # start
     - name: Check if MongoDB container is running
       run: docker ps -a
-
     - name: Check MongoDB logs
       run: docker logs mongo
-
     - name: Wait for MongoDB to be ready
       run: |
         echo "Waiting for MongoDB to be ready..."
@@ -64,16 +49,23 @@ jobs:
         echo "MongoDB failed to start in time"
         docker logs mongo
         exit 1
-      #end
-    - name: wait for Mongo to be ready
-      run: |
-        timeout 30 sh -c 'until docker exec mongo mongosh --eval "db.adminCommand({ping: 1})" > /dev/null 2>&1; do sleep 1; done'
-        echo "MongoDB is ready!"
+    # 2. download image and run it in a container
+    - name: Download artifact
+      uses: actions/download-artifact@v4  # downloads all artifacts
+      with:
+        name: toys-robust
+        path: /tmp
+    - name: Verify downloaded artifact
+      run: ls -l /tmp
+    - name: Load Docker toys-robust tar image from previous job (load is for tar images)
+      run: docker load --input /tmp/image.tar
+    - name: check toys-robust image is loaded
+      run: docker image ls
     - name: run toys-robust image in container
       run: docker run -p 8000:80 toys-robust &
     - name: Check container is running
       run: docker ps
-#    # 2. set up python and pytest environment
+#    # 3. set up python and pytest environment
     - name: Checkout
       uses: actions/checkout@v4
     - name: Set up Python

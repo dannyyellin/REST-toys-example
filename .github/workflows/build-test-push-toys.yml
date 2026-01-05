@@ -13,14 +13,14 @@ jobs:
     - name: Build and export
       uses: docker/build-push-action@v5
       with:
-        context: .
-        file: ./Dockerfile.toys
-        tags: toys:latest, ${{ secrets.DOCKER_COURSE_USERNAME }}/toys:latest
+        context: ./cicd/
+        file: ./Dockerfile
+        tags: toys-robust:latest, ${{ vars.DOCKER_COURSE_USERNAME }}/toys-robust:latest
         outputs: type=docker,dest=/tmp/image.tar
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: toys-image
+        name: toys-robust
         path: /tmp/image.tar  # downloads the image (named image.tar) to the /tmp dir
   test:
     needs: build
@@ -30,16 +30,20 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v4  # downloads all artifacts
       with:
-        name: toys-image
+        name: toys-robust
         path: /tmp
     - name: Verify downloaded artifact
       run: ls -l /tmp
-    - name: Load Docker images from previous workflows
+    - name: Load Docker toys-robust image from previous job
       run: docker load --input /tmp/image.tar
-    - name: check toys-image image is loaded
+    - name: check toys-robust image is loaded
       run: docker image ls
-    - name: run image in container
-      run: docker run -p8000:8000 toys &
+    - name: Load mongo image from dockerhub
+      run: docker load mongo:latest
+    - name: run mongo in container
+      run: docker run -p27017:27017 mongo:latest &
+    - name: run toys-robust image in container
+      run: docker run -p8000:80 toys-robust &
     - name: Check container is running
       run: docker ps
 #    # 2. set up python and pytest environment

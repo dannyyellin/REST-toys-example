@@ -1,6 +1,7 @@
 name: Build and push toys Docker image
 on:
-  push:
+# comment out next line so do not build on each push of other workloads.  Uncomment when using
+#  push:
   workflow_dispatch:
 jobs:
   build:

@@ -28,10 +28,6 @@ jobs:
     steps:
     - name: Create Docker network
       run: docker network create test-network
-    - name: Debug network
-      run: |
-        docker network inspect test-network
-        docker exec toys-robust ping -c 2 mongo
     #1. Pull Mongo and run it.
     - name: Pull mongo image from dockerhub
       run: docker pull mongo:latest
@@ -71,6 +67,10 @@ jobs:
       run: docker run -p 8000:80 -d --network test-network toys-robust
     - name: Check container is running
       run: docker ps
+    - name: Debug network
+      run: |
+        docker network inspect test-network
+        docker exec toys-robust ping -c 2 mongo
 #    # 3. set up python and pytest environment
     - name: Checkout
       uses: actions/checkout@v4

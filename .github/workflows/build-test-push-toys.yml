@@ -103,12 +103,12 @@ jobs:
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
-        username: ${{ secrets.USERNAME }}
+        username: ${{ vars.USERNAME }}
         password: ${{ secrets.PASSWORD }}
     - name: push image with "latest" and date tags to DH
       run: |
-        docker push ${{ secrets.USERNAME }}/toys
-        docker tag ${{ secrets.USERNAME }}/toys \
-        ${{ secrets.USERNAME }}/toys:${{ env.DATE }}
+        docker push ${{ vars.USERNAME }}/toys
+        docker tag ${{ vars.USERNAME }}/toys \
+        ${{ vars.USERNAME }}/toys:${{ env.DATE }}
         docker push \
-        ${{ secrets.USERNAME }}/toys:${{ env.DATE }}
+        ${{ vars.USERNAME }}/toys:${{ env.DATE }}

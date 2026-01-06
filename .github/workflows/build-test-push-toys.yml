@@ -26,9 +26,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+    #1. Create custom bridge network (private and allows toys-robust to use symbolic name for mongo)
     - name: Create Docker network
       run: docker network create test-network
-    #1. Pull Mongo and run it.
+    #2. Pull Mongo and run it.
     - name: Pull mongo image from dockerhub
       run: docker pull mongo:latest
     - name: run mongo in container
@@ -51,7 +52,7 @@ jobs:
         echo "MongoDB failed to start in time"
         docker logs mongo
         exit 1
-    # 2. download image and run it in a container
+    # 3. download toys-robust image and run it in a container
     - name: Download artifact
       uses: actions/download-artifact@v4  # downloads all artifacts
       with:
@@ -71,7 +72,7 @@ jobs:
       run: |
         docker network inspect test-network
         docker exec toys-robust ping -c 2 mongo
-#    # 3. set up python and pytest environment
+    # 4. set up python and pytest environment
     - name: Checkout
       uses: actions/checkout@v4
     - name: Set up Python
@@ -82,7 +83,7 @@ jobs:
         pip install pytest # not using "yet" lint checker like ruff
         pip install requests
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-#      # 3. run pytest tests and upload the results to GH_test_results
+      # 4. run pytest tests and upload the results to GH_test_results
     - name: check for pytest directory
       run: |
         ls -l
@@ -96,8 +97,8 @@ jobs:
       with:
         name: GH_test_results
         path: pytest-code/test_results.txt
-#      The following steps will only execute if tests succeeded
-#      # 4. Push images to DockerHub
+      # The following steps will only execute if tests succeeded
+      # 5. Push images to DockerHub
     - name: Set DATE
       run: echo "DATE=$(date -I)" >> $GITHUB_ENV
     - name: Log in to Docker Hub
@@ -107,8 +108,8 @@ jobs:
         password: ${{ secrets.PASSWORD }}
     - name: push image with "latest" and date tags to DH
       run: |
-        docker push ${{ vars.USERNAME }}/toys
-        docker tag ${{ vars.USERNAME }}/toys \
-        ${{ vars.USERNAME }}/toys:${{ env.DATE }}
+        docker push ${{ vars.USERNAME }}/toys-robust
+        docker tag ${{ vars.USERNAME }}/toys-robust \
+        ${{ vars.USERNAME }}/toys-robust:${{ env.DATE }}
         docker push \
-        ${{ vars.USERNAME }}/toys:${{ env.DATE }}
+        ${{ vars.USERNAME }}/toys-robust:${{ env.DATE }}

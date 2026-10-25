@@ -47,7 +47,11 @@ def assert_collection_contains_field_values(coll: list, field: str, values: list
 
 def test_post_toy1():
     global toy1, id1
+    print("in test_post_toy1")
+    sys.stdout.flush()
     json_data = json.dumps(toy1)
+    print("done json.dumps")
+    sys.stdout.flush()
     response = requests.post(urlToys,
         headers={"Content-Type":"application/json"},
         data=json_data)

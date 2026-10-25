@@ -1,7 +1,7 @@
 name: build-test-push-toys
 on:
   workflow_dispatch:
-#  push
+  push:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,7 +26,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    #1. Create custom bridge network (private and allows toys-robust to use symbolic name for mongo)
+    #1. Create custom bridge network (secure and allows toys-robust to use symbolic name for mongo)
     - name: Create Docker network
       run: docker network create test-network
     #2. Pull Mongo and run it.
@@ -83,7 +83,7 @@ jobs:
         pip install pytest # not using "yet" lint checker like ruff
         pip install requests
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      # 4. run pytest tests and upload the results to GH_test_results
+    # 5. run pytest tests and upload the results to GH_test_results
     - name: check for pytest directory
       run: |
         ls -l
@@ -97,8 +97,8 @@ jobs:
       with:
         name: GH_test_results
         path: pytest-code/test_results.txt
-      # The following steps will only execute if tests succeeded
-      # 5. Push images to DockerHub
+    # The following steps will only execute if tests succeeded
+    # 6. Push images to DockerHub
     - name: Set DATE
       run: echo "DATE=$(date -I)" >> $GITHUB_ENV
     - name: Log in to Docker Hub
@@ -111,5 +111,4 @@ jobs:
         docker push ${{ vars.USERNAME }}/toys-robust
         docker tag ${{ vars.USERNAME }}/toys-robust \
         ${{ vars.USERNAME }}/toys-robust:${{ env.DATE }}
-        docker push \
-        ${{ vars.USERNAME }}/toys-robust:${{ env.DATE }}
+        docker push ${{ vars.USERNAME }}/toys-robust:${{ env.DATE }}

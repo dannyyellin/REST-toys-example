@@ -83,7 +83,8 @@ def addToy():
         # return jsonify(toy),201
     except Exception as e:
         print("Exception: ", str(e))
-        return jsonify({"server error":str(e)}),500
+        app.logger.exception("Unexpected error processing request" + str(e))
+        return jsonify({"error": "Internal server error"}), 500
 
 @app.route('/toys', methods=['GET'])
 def getToys():
@@ -105,8 +106,8 @@ def getToys():
             return jsonify(list(results))
             # return list(Toys.values()), 200
     except Exception as e:
-        print("Exception: ", str(e))
-        return jsonify({"server error":str(e)}),500
+        app.logger.exception("Unexpected error processing request" + str(e))
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @app.route('/toys/<string:toyid>', methods=['GET'])
@@ -118,8 +119,8 @@ def getToy(toyid):
         print("GET request error: No such ID")
         return jsonify({"error":"Not found"}), 404
     except Exception as e:
-        print("Exception: ", str(e))
-        return jsonify({"server error":str(e)}),500
+        app.logger.exception("Unexpected error processing request" + str(e))
+        return jsonify({"error": "Internal server error"}), 500
     return jsonify(toy), 200
 
 
@@ -134,8 +135,8 @@ def delToy(toyid):
         print("GET request error: No such ID")
         return jsonify({"error":"Not found"}), 404
     except Exception as e:
-        print("Exception: ", str(e))
-        return jsonify({"server error":str(e)}),500
+        app.logger.exception("Unexpected error processing request" + str(e))
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @app.route('/toys/<string:toyid>', methods=['PUT'])
@@ -173,10 +174,8 @@ def update(toyid):
         Toys[toyid] = toy
         return toy
     except Exception as e:
-        print("Exception: ", str(e))
-        return jsonify({"server error":str(e)}),500
-        # response_data = {"id": toyid}
-        # return jsonify(response_data), 200
+        app.logger.exception("Unexpected error processing request" + str(e))
+        return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == '__main__':
     print("running toys server")

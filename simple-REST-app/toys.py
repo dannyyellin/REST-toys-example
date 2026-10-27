@@ -60,7 +60,7 @@ def addToy():
         # Check if required fields are present
         required_fields = ['name', 'age', 'price']
         if not all(field in data for field in required_fields):
-            return jsonify({"error": "Malformed data"}), 400
+            return jsonify({"error": "Malformed data"}), 422
         newID = genID()      # returns string ID
         if 'features' not in data:
             features = []
@@ -83,7 +83,8 @@ def addToy():
         # return jsonify(toy),201
     except Exception as e:
         print("Exception: ", str(e))
-        return jsonify({"server error":str(e)}),500
+        app.logger.exception("Unexpected error processing request" + str(e))
+        return jsonify({"error": "Internal server error"}), 500
 
 @app.route('/toys', methods=['GET'])
 def getToys():
@@ -102,11 +103,10 @@ def getToys():
             ]
             print("results = ",results)
             sys.stdout.flush()
-            return jsonify(list(results))
-            # return list(Toys.values()), 200
+            return jsonify(list(results)), 200
     except Exception as e:
-        print("Exception: ", str(e))
-        return jsonify({"server error":str(e)}),500
+        app.logger.exception("Unexpected error processing request" + str(e))
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @app.route('/toys/<string:toyid>', methods=['GET'])
@@ -118,8 +118,8 @@ def getToy(toyid):
         print("GET request error: No such ID")
         return jsonify({"error":"Not found"}), 404
     except Exception as e:
-        print("Exception: ", str(e))
-        return jsonify({"server error":str(e)}),500
+        app.logger.exception("Unexpected error processing request" + str(e))
+        return jsonify({"error": "Internal server error"}), 500
     return jsonify(toy), 200
 
 
@@ -134,8 +134,8 @@ def delToy(toyid):
         print("GET request error: No such ID")
         return jsonify({"error":"Not found"}), 404
     except Exception as e:
-        print("Exception: ", str(e))
-        return jsonify({"server error":str(e)}),500
+        app.logger.exception("Unexpected error processing request" + str(e))
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @app.route('/toys/<string:toyid>', methods=['PUT'])
@@ -149,7 +149,7 @@ def update(toyid):
         # Check if required fields are present
         required_fields = ['name','age','price']
         if not all(field in data for field in required_fields):
-            return jsonify({"error": "Malformed data"}), 400
+            return jsonify({"error": "Malformed data"}), 422
         if 'features' not in data:
             features = []
         else:
@@ -173,10 +173,8 @@ def update(toyid):
         Toys[toyid] = toy
         return toy
     except Exception as e:
-        print("Exception: ", str(e))
-        return jsonify({"server error":str(e)}),500
-        # response_data = {"id": toyid}
-        # return jsonify(response_data), 200
+        app.logger.exception("Unexpected error processing request" + str(e))
+        return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == '__main__':
     print("running toys server")

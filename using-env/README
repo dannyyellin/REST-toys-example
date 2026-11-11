@@ -1,0 +1,18 @@
+This directory illustrates using a .env file with Docker
+
+1. create an .env file that contains <key-name>=<key-value>
+- example: API-KEY=0e488j&6T
+- This file should be in the directory where the "docker run" command executes
+- No spaces should be between the "=" sign and the key-name and key-value.
+- List .env in .dockerignore.  That avoids copying the .env file into the docker container, where others who obtain the
+image could discover the key.
+- Don't use quotes.  If you were to write API_KEY="sk-abc123" then the quotes becomes part of key-value.
+
+2. after creating the image with a Dockerfile, run "run --env-file .env ..."
+- example:  docker run --env-file .env -p 8000:8000 myapp)
+- this command passes the key-value pairs in the .env file into the container runtime
+
+3. build and run the created container
+docker build -t myapp .
+docker run --env-file .env -p 8000:8000 myapp
+
